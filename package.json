@@ -2,9 +2,10 @@
   "name": "chai-backend",
   "version": "1.0.0",
   "description": "A mega project with Backend",
+  "type": "main",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index"
   },
   "keywords": [
     "javascript",
@@ -12,5 +13,8 @@
     "chai"
   ],
   "author": "Arnab Ghosh",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
 }
