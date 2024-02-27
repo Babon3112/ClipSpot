@@ -1,23 +1,24 @@
 import { asyncHandler } from "../utils/asyncHandler.utils.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 import { User } from "../models/user.model.js";
-import { uploaOnCloudinary } from "../utils/cloudinary.utils.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.utils.js";
 import { ApiResponse } from "../utils/ApiResponse.utils.js";
 
-const generateAccessAndRefreshToken = async (UserId) => {
+const generateAccessAndRefreshToken = async (userId) => {
   try {
-    const user = await User.findOne(UserId);
+    const user = await User.findById(userId);
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
     user.refreshToken = refreshToken;
-    await user.save({ validateBeforeSave: true });
+    await user.save({ validateBeforeSave: false });
 
     return { accessToken, refreshToken };
   } catch (error) {
     throw new ApiError(
       500,
-      "Something went wrong while generating access and refresh token"
+      "Something went wrong while generating access and refresh token",
+      error
     );
   }
 };
@@ -65,8 +66,8 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Avatar is required");
   }
 
-  const avatar = await uploaOnCloudinary(avatarLocalPath);
-  const coverImage = await uploaOnCloudinary(coverImageLocalPath);
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
 
   if (!avatar) {
     throw new ApiError(400, "Avatar is required");
@@ -104,7 +105,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const { email, userName, password } = req.body;
   if (!(email || userName)) {
-    throw new ApiError(400, "Uernamee or email required");
+    throw new ApiError(400, "Username or email required");
   }
 
   const user = await User.findOne({
@@ -125,8 +126,8 @@ const loginUser = asyncHandler(async (req, res) => {
     user._id
   );
 
-  const loggedinUser = User.findById(user._id).select(
-    "-password -refreshToken "
+  const loggedinUser = await User.findById(user._id).select(
+    "-password -refreshToken"
   );
 
   const options = {
@@ -167,8 +168,9 @@ const logoutUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .clearCookie("acceToken", accessToken)
-    .clearCookie("refreshToken", refreshToken);
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User logged Out"));
 });
 
 export { registerUser, loginUser, logoutUser };
