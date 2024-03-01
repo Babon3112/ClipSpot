@@ -1,16 +1,16 @@
 {
-  "name": "chai-backend",
+  "name": "VidVerse",
   "version": "1.0.0",
-  "description": "A mega project with Backend",
+  "description": "A project with Backend",
   "type": "module",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/server.js"
   },
   "keywords": [
     "javascript",
     "backend",
-    "chai"
+    "VidVerse"
   ],
   "author": "Arnab Ghosh",
   "license": "ISC",

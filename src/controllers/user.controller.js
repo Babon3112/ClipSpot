@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { User } from "../models/user.model.js";
-import { ApiError } from "../utils/ApiError.utils.js";
-import { ApiResponse } from "../utils/ApiResponse.utils.js";
-import { asyncHandler } from "../utils/asyncHandler.utils.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.utils.js";
+import { ApiError } from "../utils/ApiError.util.js";
+import { ApiResponse } from "../utils/ApiResponse.util.js";
+import { asyncHandler } from "../utils/asyncHandler.util.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.util.js";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
