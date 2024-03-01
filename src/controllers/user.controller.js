@@ -44,7 +44,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (
     [fullName, email, userName, password].some((field) => field?.trim() === "")
   ) {
-    throw new ApiError(400, "fullname is required");
+    throw new ApiError(400, "fullName is required");
   }
 
   const existedUser = await User.findOne({
@@ -253,11 +253,11 @@ const getUserDetails = asyncHandler(async (req, res) => {
 });
 
 const updateUserDetails = asyncHandler(async (req, res) => {
-  const { fullname, email } = req.body;
+  const { fullName, email } = req.body;
   let toUpdate = {};
 
-  if (fullname) {
-    toUpdate["fullname"] = fullname;
+  if (fullName) {
+    toUpdate["fullName"] = fullName;
   }
 
   if (email) {
@@ -423,7 +423,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     {
       $lookup: {
         from: "videos",
-        localField: "getWatchHistory",
+        localField: "watchHistory",
         foreignField: "_id",
         as: "WatchHistory",
         pipeline: [
