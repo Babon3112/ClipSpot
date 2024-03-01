@@ -24,11 +24,11 @@ const videoSchema = new Schema(
       required: true,
     },
     viwes: {
-      type: String,
+      type: Number,
       default: 0,
     },
     isPublished: {
-      typr: Boolean,
+      type: Boolean,
       default: true,
     },
     owner: {
