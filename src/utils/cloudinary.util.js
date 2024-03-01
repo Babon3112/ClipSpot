@@ -1,5 +1,6 @@
-import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
+import {extractPublicId} from "cloudinary-build-url";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -16,7 +17,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     });
     // file has been uploaded successfully
     // console.log(`File uploaded successfully on cloudinary`, response.url);
-    fs.unlinkSync(localFilePath)
+    fs.unlinkSync(localFilePath);
     return response;
   } catch (error) {
     fs.unlinkSync(localFilePath); // remove locally saved temporary file as the upload operation failed
@@ -24,4 +25,18 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-export { uploadOnCloudinary };
+const deleteFromCloudinary = async (url, resourceType = "image") => {
+  const publicId = extractPublicId(url);
+  try {
+    const response = await cloudinary.uploader.destroy(publicId, {
+      resource_type: resourceType,
+    });
+    return response;
+  } catch (error) {
+    console.log("Error while deleting from cloudinary");
+    console.log(error);
+    return null;
+  }
+};
+
+export { uploadOnCloudinary, deleteFromCloudinary };
