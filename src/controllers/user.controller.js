@@ -8,6 +8,10 @@ import {
   uploadOnCloudinary,
   deleteFromCloudinary,
 } from "../utils/cloudinary.util.js";
+import {
+  CLOUD_AVATAR_FOLDER_NAME,
+  CLOUD_COVERIMAGE_FOLDER_NAME,
+} from "../constants.js";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -71,20 +75,26 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Avatar is required");
   }
 
-  const avatar = await uploadOnCloudinary(avatarLocalPath);
-  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+  const avatar = await uploadOnCloudinary(
+    avatarLocalPath,
+    CLOUD_AVATAR_FOLDER_NAME
+  );
+  const coverImage = await uploadOnCloudinary(
+    coverImageLocalPath,
+    CLOUD_COVERIMAGE_FOLDER_NAME
+  );
 
   if (!avatar) {
     throw new ApiError(400, "Avatar is required");
   }
 
   const user = await User.create({
+    userName: userName.toLowerCase(),
     fullName,
-    avatar: avatar.url,
-    coverImage: coverImage?.url || "",
     email,
     password,
-    userName: userName.toLowerCase(),
+    avatar: avatar.url,
+    coverImage: coverImage?.url || "",
   });
 
   const createdUser = await User.findById(user._id).select(
@@ -285,7 +295,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   const avatarLocalPath = req.file?.path;
 
   if (!avatarLocalPath) {
-    throw new ApiError(400, "Avatar file missing");
+    throw new ApiError(400, "Avatar file is required");
   }
 
   const user = await User.findById(req.user?._id).select(
@@ -297,11 +307,14 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while updating avatar");
   }
 
-  const avatar = await uploadOnCloudinary(avatarLocalPath);
+  const avatar = await uploadOnCloudinary(
+    avatarLocalPath,
+    CLOUD_AVATAR_FOLDER_NAME
+  );
 
   if (!avatar.url) {
     throw new ApiError(
-      400,
+      500,
       "Error while uploading on avatar file in cloudinary"
     );
   }
@@ -330,7 +343,10 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while updating avatar");
   }
 
-  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+  const coverImage = await uploadOnCloudinary(
+    coverImageLocalPath,
+    CLOUD_COVERIMAGE_FOLDER_NAME
+  );
 
   if (!coverImage.url) {
     throw new ApiError(
