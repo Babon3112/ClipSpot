@@ -1,12 +1,12 @@
 import { Router } from "express";
 import {
-  addVideoToPlaylist,
+  updatePlaylist,
   createPlaylist,
   deletePlaylist,
   getPlaylistById,
   getUserPlaylists,
+  addVideoToPlaylist,
   removeVideoFromPlaylist,
-  updatePlaylist,
 } from "../controllers/playlist.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
