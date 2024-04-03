@@ -17,16 +17,19 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
 
   // Check if the video exists
   const video = await Video.findById(videoId);
-  if (!video) {
+  if (!video || !video.isPublished) {
     throw new ApiError(404, "Video not found!");
   }
 
   // Toggle like
-  const videoLike = await Like.findOne({ video: videoId });
+  const userAlreadyLiked = await Like.findOne({
+    video: videoId,
+    owner: req.user?._id,
+  });
 
   let like;
 
-  if (videoLike) {
+  if (userAlreadyLiked) {
     await Like.deleteOne({ video: videoId });
   } else {
     like = await Like.create({
