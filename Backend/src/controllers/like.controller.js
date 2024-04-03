@@ -59,12 +59,14 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
   if (!comment) {
     throw new ApiError(404, "comment is not available!!!");
   }
-
-  const commentLike = await Like.findOne({ comment: commentId });
+  const userAlreadyLiked = await Like.findOne({
+    comment: commentId,
+    owner: req.user?._id,
+  });
 
   let like;
 
-  if (commentLike) {
+  if (userAlreadyLiked) {
     await Like.deleteOne({ comment: commentId });
   } else {
     like = await Like.create({
@@ -95,11 +97,14 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
     throw new ApiError(404, "tweet is not available!!!");
   }
 
-  const tweetLike = await Like.findOne({ tweet: tweetId });
+  const userAlreadyLiked = await Like.findOne({
+    tweet: tweetId,
+    owner: req.user?._id,
+  });
 
   let like;
 
-  if (tweetLike) {
+  if (userAlreadyLiked) {
     await Like.deleteOne({ tweet: tweetId });
   } else {
     like = await Like.create({
