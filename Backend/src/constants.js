@@ -1,4 +1,4 @@
-export const DB_NAME = "VidVerse";
+export const DB_NAME = "vidverse";
 
 export const CLOUD_AVATAR_FOLDER_NAME = "VidVerse/Avatar";
 export const CLOUD_COVERIMAGE_FOLDER_NAME = "VidVerse/CoverImage";
