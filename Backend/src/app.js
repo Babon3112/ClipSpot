@@ -28,14 +28,14 @@ import healthcheckRouter from "./routes/healthcheck.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
 
 //routes declaration
-app.use("/vidverse/v1/likes", likeRouter);
-app.use("/vidverse/v1/users", userRouter);
-app.use("/vidverse/v1/videos", videoRouter);
-app.use("/vidverse/v1/tweets", tweetRouter);
-app.use("/vidverse/v1/comments", commentRouter);
-app.use("/vidverse/v1/playlist", playlistRouter);
-app.use("/vidverse/v1/dashboard", dashboardRouter);
-app.use("/vidverse/v1/healthcheck", healthcheckRouter);
-app.use("/vidverse/v1/subscriptions", subscriptionRouter);
+app.use("/vidverse/api/v1/likes", likeRouter);
+app.use("/vidverse/api/v1/users", userRouter);
+app.use("/vidverse/api/v1/videos", videoRouter);
+app.use("/vidverse/api/v1/tweets", tweetRouter);
+app.use("/vidverse/api/v1/comments", commentRouter);
+app.use("/vidverse/api/v1/playlist", playlistRouter);
+app.use("/vidverse/api/v1/dashboard", dashboardRouter);
+app.use("/vidverse/api/v1/healthcheck", healthcheckRouter);
+app.use("/vidverse/api/v1/subscriptions", subscriptionRouter);
 
 export { app };

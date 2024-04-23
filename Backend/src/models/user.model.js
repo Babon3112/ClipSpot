@@ -4,6 +4,12 @@ import bcrypt from "bcrypt";
 
 const userSchema = new Schema(
   {
+    fullName: {
+      type: String,
+      required: true,
+      trim: true,
+      index: true,
+    },
     userName: {
       type: String,
       required: true,
@@ -18,12 +24,6 @@ const userSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-    },
-    fullName: {
-      type: String,
-      required: true,
-      trim: true,
-      index: true,
     },
     avatar: {
       type: String, //cloudinary url

@@ -197,7 +197,7 @@ const getTweetComments = asyncHandler(async (req, res) => {
       return res
         .status(200)
         .json(
-          new ApiResponse(200, { result }, "Video Comment fetched successfully")
+          new ApiResponse(200, { result }, "Tweet Comment fetched successfully")
         );
     })
     .catch(function (error) {
