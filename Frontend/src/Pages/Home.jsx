@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "../Components/Navbar";
 import styled from "styled-components";
 import Sidebar from "../Components/Sidebar";
-import Videos from "../Components/Videos";
+import VideoList from "../Components/VideoList";
 
 const Container = styled.div``;
 
@@ -16,7 +16,7 @@ const Home = () => {
       <Navbar />
       <Wrapper>
         <Sidebar />
-        <Videos />
+        <VideoList />
       </Wrapper>
     </Container>
   );
