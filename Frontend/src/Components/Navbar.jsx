@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import SearchIcon from "@mui/icons-material/Search";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/apiCalls";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Link } from "react-router-dom";
+import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 
 const Container = styled.div`
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
@@ -9,7 +14,8 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   height: 70px;
-  background-color: #1c1f25;
+  background-color: #000000;
+  border-bottom: 1px solid #007bff;
   color: #f0f2f5;
   display: flex;
   align-items: center;
@@ -25,7 +31,7 @@ const Left = styled.div`
 
 const Logo = styled.h1`
   margin: 0;
-  color: #00c6ff;
+  color: #007bff;
   font-size: 28px;
   font-weight: bold;
   font-family: "Montserrat", sans-serif;
@@ -80,11 +86,14 @@ const IconContainer = styled.div`
 
 const Right = styled.div`
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   flex: 1;
 `;
 
 const MenuItem = styled.div`
+  display: flex;
+  align-items: center;
   margin-left: 20px;
   padding: 10px;
   cursor: pointer;
@@ -98,7 +107,64 @@ const MenuItem = styled.div`
   }
 `;
 
+const Image = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 10px;
+  object-fit: cover;
+`;
+
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: 70px;
+  right: 5px;
+  background-color: black;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3);
+  z-index: 1;
+`;
+
+const DropdownItem = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: gray;
+  }
+`;
+
 const Navbar = () => {
+  const loggedUser = useSelector((state) => state.user.currentUser?.data.user);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = (e) => {
+    logout(dispatch).then(() => window.location.reload());
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -114,8 +180,66 @@ const Navbar = () => {
           </SearchContainer>
         </Center>
         <Right>
-          <MenuItem>Register</MenuItem>
-          <MenuItem>SIGN IN</MenuItem>
+          {loggedUser ? (
+            <>
+              <Link to="/upload-video">
+                <MenuItem>
+                  <VideoCallOutlinedIcon style={{ fontSize: "35px" }} />
+                </MenuItem>
+              </Link>
+              <div ref={dropdownRef}>
+                <MenuItem onClick={toggleDropdown}>
+                  <Image
+                    src={
+                      loggedUser.avatar ||
+                      "https://res.cloudinary.com/arnabcloudinary/image/upload/v1713075500/EazyBuy/Avatar/upload-avatar.png"
+                    }
+                  />
+                </MenuItem>
+                {isDropdownOpen && (
+                  <DropdownMenu>
+                    <Link
+                      to="/your-account"
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      <DropdownItem>Your Account</DropdownItem>
+                    </Link>
+                    <Link
+                      to="/change-password"
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      <DropdownItem>Change password</DropdownItem>
+                    </Link>
+                    <Link
+                      to="/delete-account"
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      <DropdownItem>Delete account</DropdownItem>
+                    </Link>
+                    <DropdownItem onClick={handleLogout}>
+                      Logout
+                      <LogoutIcon fontSize="" />
+                    </DropdownItem>
+                  </DropdownMenu>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/register"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem>REGISTER</MenuItem>
+              </Link>
+              <Link
+                to="/login"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem>SIGN IN</MenuItem>
+              </Link>
+            </>
+          )}
         </Right>
       </Wrapper>
     </Container>
